@@ -119,25 +119,38 @@ namespace Api.Builder
             }
             return this;
         }
+        //public ApiBuilder AddDbContexts()
+        //{
+        //    if (Options.ContextOption == null) return this;
+        //    var contexts = MapperUtils.GetAllContext();
+        //    foreach (var context in contexts)
+        //    {
+        //        var builder = new DbContextOptionsBuilder().UseLazyLoadingProxies();
+        //        var lifetime = context.GetCustomAttribute<ApiContext>()?.LifeTime ?? Enums.LifeTime.Transient;
+        //        var serviceLifeTime = (ServiceLifetime)(int)lifetime;
+        //        var options = Options.ContextOption(builder).Options;
+        //        Services.Add(new ServiceDescriptor(context, _ => Activator.CreateInstance(context, options), serviceLifeTime));
+        //    }
+
+        //    return this;
+        //}
+
         public ApiBuilder AddDbContexts()
         {
-            if (Options.ContextOption == null) return this;
             var contexts = MapperUtils.GetAllContext();
+
             foreach (var context in contexts)
             {
-                var builder = new DbContextOptionsBuilder();
-                builder.UseLazyLoadingProxies();
                 var lifetime = context.GetCustomAttribute<ApiContext>()?.LifeTime ?? Enums.LifeTime.Transient;
                 var serviceLifeTime = (ServiceLifetime)(int)lifetime;
+                var options = Options.GetDbContextOptions(context);
 
-                Services.Add(new ServiceDescriptor(context, p =>
-                  {
-                      return Activator.CreateInstance(context, Options.ContextOption(builder, p.GetService<IConfiguration>().GetConnectionString(context.Name)).Options);
-                  }, serviceLifeTime));
+                Services.Add(new ServiceDescriptor(context, _ => Activator.CreateInstance(context, options), serviceLifeTime));
             }
 
             return this;
         }
+
         public IServiceCollection AddGeneric<TDto, TEntity>(IServiceCollection services) where TDto : class where TEntity : class
         {
             services.AddScoped<IService<TDto>, Service<TDto, TEntity>>();

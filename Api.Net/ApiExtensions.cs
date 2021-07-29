@@ -31,7 +31,7 @@ namespace Api
                    .AddDtoServices()
                    .AddControllers()
                    .AddConventions();
-            mvcBuilder.AddJsonOptions(opt =>
+            mvcBuilder.AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
