@@ -9,6 +9,8 @@ namespace Api.Builder
 
     public class ApiOptions
     {
+        private readonly Dictionary<Type, Func<DbContextOptions>> ContextOptionsProvider = new Dictionary<Type, Func<DbContextOptions>>();
+
         public ApiOptions()
         {
             Conventions = new ApiConvention();
@@ -16,14 +18,7 @@ namespace Api.Builder
 
         public string RoutePrefix { get; set; } = "api";
 
-        // Breaking change
-        // public Func<DbContextOptionsBuilder, string, DbContextOptionsBuilder> ContextOption { get; set; }
-
-        public Func<DbContextOptionsBuilder, DbContextOptionsBuilder> ContextOption { get; set; }
-
         public ApiConvention Conventions { get; }
-
-        private readonly Dictionary<Type, DbContextOptions> ContextOptions = new Dictionary<Type, DbContextOptions>();
 
         public void UseDbContext<TContext>() where TContext: DbContext
         {
@@ -34,13 +29,17 @@ namespace Api.Builder
         {
             var contextType = typeof(TContext);
             var builder = new DbContextOptionsBuilder<TContext>();
-            var options = config(builder).UseLazyLoadingProxies().Options;
-            ContextOptions.Add(contextType, options);
+            ContextOptionsProvider.Add(contextType, () => config(builder).UseLazyLoadingProxies().Options);
         }
 
         internal DbContextOptions GetDbContextOptions(Type contextType)
         {
-            return ContextOptions[contextType];
+            if (ContextOptionsProvider.TryGetValue(contextType, out Func<DbContextOptions> factory))
+            {
+                return factory();
+            }
+
+            return null;
         }
     }
 }
