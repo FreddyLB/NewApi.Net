@@ -11,14 +11,9 @@ namespace Api.Builder
     {
         private readonly Dictionary<Type, Func<DbContextOptions>> ContextOptionsProvider = new Dictionary<Type, Func<DbContextOptions>>();
 
-        public ApiOptions()
-        {
-            Conventions = new ApiConvention();
-        }
-
         public string RoutePrefix { get; set; } = "api";
 
-        public ApiConvention Conventions { get; }
+        public ApiConvention Conventions { get; } = new ApiConvention();
 
         public void UseDbContext<TContext>() where TContext: DbContext
         {
