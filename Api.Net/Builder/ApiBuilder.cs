@@ -45,10 +45,16 @@ namespace Api.Builder
         }
         public ApiBuilder AddDtoMaps()
         {
-            Mapper.Initialize(c =>
+            Services.AddAutoMapper(c =>
             {
+                c.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
                 c.ResolveDtoMaps();
             });
+
+            //Mapper.Initialize(c =>
+            //{
+            //    c.ResolveDtoMaps();
+            //});
             ResolveDtoProjections();
             return this;
         }
