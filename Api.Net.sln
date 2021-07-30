@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Net", "Api.Net\Api.Net.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Net.Core", "Api.Net.Core\Api.Net.Core.csproj", "{E17674E2-967A-4EBB-8C8B-29C05BE47FE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Net.Dev", "Api.Net.Dev\Api.Net.Dev.csproj", "{59011EE1-D6D1-484E-A8BC-AD117AAA87B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Net.Dev", "Api.Net.Dev\Api.Net.Dev.csproj", "{59011EE1-D6D1-484E-A8BC-AD117AAA87B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Net.Tests", "Api.Net.Tests\Api.Net.Tests.csproj", "{EA4989F1-1F37-418B-AAB5-1E3B9FD1D519}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{59011EE1-D6D1-484E-A8BC-AD117AAA87B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59011EE1-D6D1-484E-A8BC-AD117AAA87B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59011EE1-D6D1-484E-A8BC-AD117AAA87B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA4989F1-1F37-418B-AAB5-1E3B9FD1D519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA4989F1-1F37-418B-AAB5-1E3B9FD1D519}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA4989F1-1F37-418B-AAB5-1E3B9FD1D519}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA4989F1-1F37-418B-AAB5-1E3B9FD1D519}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
