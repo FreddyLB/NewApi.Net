@@ -9,6 +9,6 @@ namespace Api.Net.Core.Models
     class ApiTranslationModel
     {
         public string Endpoint { get; set; }
-        public IEnumerable<Tuple<string, string>> Controllers { get; set; }
+        public IEnumerable<(string, string)> Controllers { get; set; } = new List<(string, string)>();
     }
 }

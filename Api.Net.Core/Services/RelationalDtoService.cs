@@ -46,7 +46,7 @@ namespace Api.Net.Core.Services
             return Tuple.Create($"/api/{url}", $"?{queryString}");
         }
 
-        private IEnumerable<string> GetParameters(IEnumerable<Tuple<string, string>> controllers)
+        private IEnumerable<string> GetParameters(IEnumerable<(string, string)> controllers)
         {
             foreach (var controller in controllers)
             {
@@ -68,7 +68,7 @@ namespace Api.Net.Core.Services
             var ids = reg.Groups["id"].Captures.Cast<Capture>().Select(t => t.Value);
 
             var endpoint = reg.Groups["end"].Captures.Cast<Capture>().First().Value;
-            var conts = controllers.Zip(ids, Tuple.Create);
+            var conts = controllers.Zip(ids, ValueTuple.Create);
             return new ApiTranslationModel { Endpoint = endpoint, Controllers = conts };
         }
     }
