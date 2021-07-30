@@ -108,7 +108,7 @@ namespace Api.Utils
         }
         private static IEnumerable<Assembly> GetAssemblies()
         {
-            var currentAssembly = Assembly.GetEntryAssembly();
+            var currentAssembly = Assembly.GetEntryAssembly()!;
             var assemblies = currentAssembly.GetReferencedAssemblies().Select(t => Assembly.Load(t)).ToList();
             assemblies.Add(currentAssembly);
             return assemblies;
