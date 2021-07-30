@@ -128,11 +128,16 @@ namespace Api.Builder
 
             foreach (var context in contexts)
             {
-                var lifetime = context.GetCustomAttribute<ApiContext>()?.LifeTime ?? Enums.LifeTime.Transient;
-                var serviceLifeTime = (ServiceLifetime)(int)lifetime;
                 var options = Options.GetDbContextOptions(context);
 
-                Services.Add(new ServiceDescriptor(context, _ => Activator.CreateInstance(context, options), serviceLifeTime));
+                // Only register the DbContext's added using `ApiOptions.UseDbContext`
+                if (options != null)
+                {
+                    var lifetime = context.GetCustomAttribute<ApiContext>()?.LifeTime ?? Enums.LifeTime.Transient;
+                    var serviceLifeTime = (ServiceLifetime)(int)lifetime;
+
+                    Services.Add(new ServiceDescriptor(context, _ => Activator.CreateInstance(context, options), serviceLifeTime));
+                }
             }
 
             return this;
