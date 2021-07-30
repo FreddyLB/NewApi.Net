@@ -12,6 +12,7 @@ using Api;
 using Api.Attributes;
 using Api.Net.Core.Utils;
 using Api.Net.Core.Metatada;
+using Api.Models;
 
 namespace Api.Controllers
 {
@@ -29,7 +30,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public virtual IActionResult Find(string id)
+        public virtual ActionResult<TDto> Find(string id)
         {
             try
             {
@@ -51,7 +52,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public virtual IActionResult GetAll(ApiParameter parameter)
+        public virtual ActionResult<ListResult> GetAll(ApiParameter parameter)
         {
             try
             {
@@ -67,12 +68,13 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Add([FromBody] TDto dto)
+        public virtual ActionResult<TDto> Add([FromBody] TDto dto)
         {
             try
             {
-                dto = Service.Add(dto);
-                return Ok(dto);
+                var result = Service.Add(dto);
+                //return CreatedAtAction(nameof(Find), result.GetValue<object>("Id"), result);
+                return Ok(result);
             }
             catch (ValidateException ex)
             {
@@ -87,7 +89,7 @@ namespace Api.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public virtual IActionResult Update(string id, [FromBody] TDto dto)
+        public virtual ActionResult<TDto> Update(string id, [FromBody] TDto dto)
         {
             try
             {
@@ -107,7 +109,7 @@ namespace Api.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public virtual IActionResult PartialUpdate(string id, [FromBody] object changes)
+        public virtual ActionResult<TDto> PartialUpdate(string id, [FromBody] object changes)
         {
             try
             {
@@ -130,7 +132,7 @@ namespace Api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public virtual IActionResult Delete(string id)
+        public virtual ActionResult<TDto> Delete(string id)
         {
             try
             {
