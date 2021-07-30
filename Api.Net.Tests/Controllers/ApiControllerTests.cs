@@ -47,7 +47,7 @@ namespace Api.Net.Tests.Controllers
             var controller = services.GetService<ApiController<PersonDto>>();
 
             var result = controller.GetAll(new ApiParameter());
-            
+            Assert.Empty(result.Value.Data as IEnumerable<PersonDto>);            
         }
 
         private static IServiceProvider GetServiceProvider()
