@@ -3,6 +3,7 @@
   <PropertyGroup>
 	<TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<Nullable>enable</Nullable>
     <Authors>josbelluna</Authors>
     <Company>josbelluna</Company>
     <Description>Simple implementation of web api using the Repository/Service/Dto patterns and based on Asp Net Core Mvc. . Source code and docs in https://github.com/josbelluna/Api.Net</Description>

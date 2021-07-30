@@ -18,7 +18,7 @@ namespace Api
     public static class ApiExtensions
     {
 
-        public static IMvcBuilder AddApi(this IMvcBuilder mvcBuilder, Action<ApiOptions> config = null)
+        public static IMvcBuilder AddApi(this IMvcBuilder mvcBuilder, Action<ApiOptions>? config = null)
         {
             var options = new ApiOptions();
             config?.Invoke(options);
@@ -43,6 +43,12 @@ namespace Api
             mvcBuilder.Use((ctx, next) =>
             {
                 var service = ctx.RequestServices.GetService<IRelationalDtoService>();
+
+                if (service == null)
+                {
+                    throw new InvalidOperationException($"{typeof(IRelationalDtoService)} is not register, you should call `AddApi` first ");
+                }
+
                 var path = service.TranslateRoute(ctx.Request.Path);
                 if (path != null)
                 {
