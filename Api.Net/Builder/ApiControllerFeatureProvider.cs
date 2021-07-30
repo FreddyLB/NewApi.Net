@@ -15,13 +15,13 @@ namespace Api
     {
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {           
-            foreach (var dtoTupe in MapperUtils.GetAllDtos())
+            foreach (var dtoType in MapperUtils.GetAllDtos())
             {
-                var typeName = dtoTupe.Name + "Controller";
+                var typeName = dtoType.Name + "Controller";
                 if (feature.Controllers.Any(t => t.Name == typeName)) return;
 
                
-                var controllerType = typeof(ApiController<>).MakeGenericType(dtoTupe);
+                var controllerType = typeof(ApiController<>).MakeGenericType(dtoType);
                 feature.Controllers.Add(controllerType.GetTypeInfo());
 
             }

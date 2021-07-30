@@ -51,10 +51,6 @@ namespace Api.Builder
                 c.ResolveDtoMaps();
             });
 
-            //Mapper.Initialize(c =>
-            //{
-            //    c.ResolveDtoMaps();
-            //});
             ResolveDtoProjections();
             return this;
         }
