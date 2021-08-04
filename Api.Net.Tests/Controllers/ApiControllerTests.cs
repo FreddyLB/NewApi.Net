@@ -19,7 +19,7 @@ using Xunit;
 
 namespace Api.Net.Tests.Controllers
 {
-    public class ApiControllerTests
+    public class ApiControllerTests : IDisposable
     {
         private static IServiceProvider Provider = GetServiceProvider();
 
@@ -65,6 +65,12 @@ namespace Api.Net.Tests.Controllers
             });
 
             return services.BuildServiceProvider();
+        }
+
+        public void Dispose()
+        {
+            var dbContext = Provider.GetService<PersonDbContext>();
+            dbContext.Clear();
         }
     }
 }
