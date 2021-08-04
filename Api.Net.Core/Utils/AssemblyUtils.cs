@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -16,20 +17,26 @@ namespace Api.Net.Core.Utils
         public static IEnumerable<Assembly> GetAssemblies()
         {
             var result = new List<Assembly>();
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            // Adds the current domain assemblies
+            var domainAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            result.AddRange(domainAssemblies);
 
             // Adds the current assembly and its references
             var currentAssembly = Assembly.GetEntryAssembly();
-            if (currentAssembly != null)
-            {
+            if (currentAssembly != null) 
+            { 
                 result.Add(currentAssembly);
                 result.AddRange(GetReferencedAssemblies(currentAssembly));
             }
             
-            foreach(var assembly in assemblies)
+            foreach(var assembly in domainAssemblies)
             {
-                var referencedAssemblies = GetReferencedAssemblies(assembly);
-                result.AddRange(referencedAssemblies);
+                if (assembly != null)
+                {
+                    var referencedAssemblies = GetReferencedAssemblies(assembly);
+                    result.AddRange(referencedAssemblies);
+                }
             }
 
             // Ensure there is not duplicated assemblies
@@ -38,7 +45,21 @@ namespace Api.Net.Core.Utils
 
         private static IEnumerable<Assembly> GetReferencedAssemblies(Assembly assembly)
         {
-            return assembly.GetReferencedAssemblies().Select(t => Assembly.Load(t)).ToList();
+            return assembly.GetReferencedAssemblies()
+                .Select(LoadAssemblyOrNull)
+                .Where(t => t != null)!;
+
+            static Assembly? LoadAssemblyOrNull(AssemblyName assemblyName)
+            {
+                try
+                {
+                    return Assembly.Load(assemblyName);
+                }
+                catch (FileNotFoundException)
+                {
+                    return null;
+                }
+            }
         }
     }
 }

@@ -21,16 +21,9 @@ namespace Api.Controllers
     {
         public ApiController(IService<TDto> service, IListService listService)
         {
-            Service = service;
-            ListService = listService;
+            Service = service ?? throw new ArgumentNullException(nameof(service));
+            ListService = listService ?? throw new ArgumentNullException(nameof(listService));
         }
-
-        //public override void OnActionExecuting(ActionExecutingContext context)
-        //{
-        //    base.OnActionExecuting(context);
-        //    Service = HttpContext.RequestServices.GetService<IService<TDto>>();
-        //    ListService = HttpContext.RequestServices.GetService<IListService>();
-        //}
 
         protected IService<TDto> Service { get; }
         protected IListService ListService { get; }
@@ -80,7 +73,7 @@ namespace Api.Controllers
             try
             {
                 var result = Service.Add(dto);
-                //return CreatedAtAction(nameof(Find), result.GetValue<object>("Id"), result);
+                // return CreatedAtAction(nameof(Find), result.GetValue<object>("Id"), result);
                 return Ok(result);
             }
             catch (ValidateException ex)
