@@ -19,14 +19,21 @@ namespace Api.Controllers
     [ApiControllerModelConvention]
     public class ApiController<TDto> : Controller where TDto : class
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public ApiController(IService<TDto> service, IListService listService)
         {
-            base.OnActionExecuting(context);
-            Service = HttpContext.RequestServices.GetService<IService<TDto>>();
-            ListService = HttpContext.RequestServices.GetService<IListService>();
+            Service = service;
+            ListService = listService;
         }
-        protected IService<TDto> Service { get; set; }
-        protected IListService ListService { get; set; }
+
+        //public override void OnActionExecuting(ActionExecutingContext context)
+        //{
+        //    base.OnActionExecuting(context);
+        //    Service = HttpContext.RequestServices.GetService<IService<TDto>>();
+        //    ListService = HttpContext.RequestServices.GetService<IListService>();
+        //}
+
+        protected IService<TDto> Service { get; }
+        protected IListService ListService { get; }
 
         [HttpGet]
         [Route("{id}")]

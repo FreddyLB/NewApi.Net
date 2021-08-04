@@ -2,6 +2,7 @@
 using Api.Controllers;
 using Api.Dto.Base;
 using Api.Parameters;
+using Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,6 +21,19 @@ namespace Api.Net.Tests.Controllers
         public string Name { get; set; }
 
         public int Age { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PersonDto dto &&
+                   Id == dto.Id &&
+                   Name == dto.Name &&
+                   Age == dto.Age;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Age);
+        }
     }
 
     public class Person
@@ -28,6 +42,19 @@ namespace Api.Net.Tests.Controllers
         public string Name { get; set; }
 
         public int Age { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PersonDto dto &&
+                   Id == dto.Id &&
+                   Name == dto.Name &&
+                   Age == dto.Age;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Age);
+        }
     }
 
     public class PersonDbContext : DbContext
@@ -44,10 +71,14 @@ namespace Api.Net.Tests.Controllers
         public void FindTest()
         {
             var services = GetServiceProvider();
-            var controller = services.GetService<ApiController<PersonDto>>();
+            var s = services.GetService<IService<PersonDto>>();
+            var controller = new ApiController<PersonDto>();
+            controller.Add(new PersonDto { Name = "Ana", Age = 23 });
+            controller.Add(new PersonDto { Name = "Maria", Age = 30 });
 
             var result = controller.GetAll(new ApiParameter());
-            Assert.Empty(result.Value.Data as IEnumerable<PersonDto>);            
+            Console.WriteLine(result);
+            Assert.Empty(result.Value as IEnumerable<PersonDto>);            
         }
 
         private static IServiceProvider GetServiceProvider()
