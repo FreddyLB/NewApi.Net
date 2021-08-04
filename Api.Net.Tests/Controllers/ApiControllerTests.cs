@@ -45,7 +45,7 @@ namespace Api.Net.Tests.Controllers
 
         public override bool Equals(object obj)
         {
-            return obj is PersonDto dto &&
+            return obj is Person dto &&
                    Id == dto.Id &&
                    Name == dto.Name &&
                    Age == dto.Age;
@@ -67,18 +67,25 @@ namespace Api.Net.Tests.Controllers
 
     public class ApiControllerTests
     {
+        private static IServiceProvider Provider = GetServiceProvider();
+
         [Fact]
         public void FindTest()
         {
-            var services = GetServiceProvider();
-            var s = services.GetService<IService<PersonDto>>();
-            var controller = new ApiController<PersonDto>();
-            controller.Add(new PersonDto { Name = "Ana", Age = 23 });
-            controller.Add(new PersonDto { Name = "Maria", Age = 30 });
+            var controller = GetController<PersonDto>();
+            //controller.Add(new PersonDto { Name = "Ana", Age = 23 });
+            //controller.Add(new PersonDto { Name = "Maria", Age = 30 });
 
-            var result = controller.GetAll(new ApiParameter());
-            Console.WriteLine(result);
-            Assert.Empty(result.Value as IEnumerable<PersonDto>);            
+            //var result = controller.GetAll(new ApiParameter());
+            //Console.WriteLine(result);
+            //Assert.Empty(result.Value as IEnumerable<PersonDto>);            
+        }
+
+        private static ApiController<T> GetController<T>() where T: class
+        {
+            var service = Provider.GetService<IService<T>>();
+            var listService = Provider.GetService<IListService>();
+            return new ApiController<T>(service, listService);
         }
 
         private static IServiceProvider GetServiceProvider()

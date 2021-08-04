@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Api.Net.Core.DataAccess.Entity;
+using Api.Net.Core.Utils;
 
 namespace Api.Utils
 {
@@ -46,7 +47,7 @@ namespace Api.Utils
         public static IEnumerable<Type> GetAllDtos()
         {
 
-            var types = GetAssemblies().SelectMany(t => t.DefinedTypes).Where(t => !t.IsAbstract);
+            var types = AssemblyUtils.GetAssemblies().SelectMany(t => t.DefinedTypes).Where(t => !t.IsAbstract);
             foreach (var type in types)
             {
                 var interfaces = type.GetInterfaces().Where(t2 => t2.IsGenericType && t2.GetGenericTypeDefinition() == typeof(IDto<,>));
@@ -61,7 +62,7 @@ namespace Api.Utils
 
         private static IEnumerable<ContextEntities> GetContextEntities()
         {
-            var asseblies = GetAssemblies();
+            var asseblies = AssemblyUtils.GetAssemblies();
             var contexts = asseblies.SelectMany(t => t.DefinedTypes).Where(t => !t.IsAbstract && t.InheritsFrom(typeof(DbContext)));
 
             foreach (var context in contexts)
@@ -76,7 +77,7 @@ namespace Api.Utils
         private static IEnumerable<ContextEntities> GetBaseEntities()
         {
             List<Type> entities = new List<Type>();
-            var types = GetAssemblies().SelectMany(t => t.DefinedTypes).Where(t => !t.IsAbstract);
+            var types = AssemblyUtils.GetAssemblies().SelectMany(t => t.DefinedTypes).Where(t => !t.IsAbstract);
             foreach (var type in types)
             {
                 var interfaces = type.GetInterfaces().Where(t2 => t2.IsGenericType && t2.GetGenericTypeDefinition() == typeof(IBaseEntity<,>));
@@ -89,29 +90,22 @@ namespace Api.Utils
         }
         public static IEnumerable<Type> GetAllContext()
         {
-            var assemblies = GetAssemblies();
+            var assemblies = AssemblyUtils.GetAssemblies();
 
             var contexts = assemblies.SelectMany(t => t.DefinedTypes).Where(t => !t.IsAbstract && t.InheritsFrom(typeof(DbContext)));
             return contexts;
         }
         public static IEnumerable<Type> GetApiRepositories()
         {
-            var types = GetAssemblies().SelectMany(t => t.DefinedTypes)
+            var types = AssemblyUtils.GetAssemblies().SelectMany(t => t.DefinedTypes)
                                   .Where(t => t.GetCustomAttribute<ApiRepository>() != null);
             return types;
         }
         public static IEnumerable<Type> GetApiServices()
         {
-            var types = GetAssemblies().SelectMany(t => t.DefinedTypes)
+            var types = AssemblyUtils.GetAssemblies().SelectMany(t => t.DefinedTypes)
                                   .Where(t => t.GetCustomAttribute<ApiService>() != null);
             return types;
-        }
-        private static IEnumerable<Assembly> GetAssemblies()
-        {
-            var currentAssembly = Assembly.GetEntryAssembly()!;
-            var assemblies = currentAssembly.GetReferencedAssemblies().Select(t => Assembly.Load(t)).ToList();
-            assemblies.Add(currentAssembly);
-            return assemblies;
         }
     }
 }
