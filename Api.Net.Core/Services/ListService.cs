@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using Api.Models;
 using Api.Utils;
-using Api.Dto.Interfaces;
 using Api.Enums;
-using System.Reflection;
 using System;
 using System.Collections.Generic;
 using Api.Net.Core.Metatada;
@@ -16,41 +14,35 @@ namespace Api.Services
         {
             var entities = parameters.Expansions.Any() ? service.GetDto(ResolveExpansions<TDto>(parameters.Expansions)) : service.Dto;
 
-            //Filter
+            // Filter
             var filters = parameters.Filters;
             entities = entities.Filter(filters);
 
-            //Order
+            // Order
             var orders = parameters.Orders;
             entities = entities.Sort(orders ?? new string[] { "Id" }, parameters.Descending ? SortType.Descending : SortType.Ascending);
             var count = entities.Count();
 
-            //Paginate
+            // Paginate
             entities = entities.Paginate(parameters.CurrentPage, parameters.PageSize);
 
-            //Select        
+            // Select        
             var fields = ResolveProjectionProperties(typeof(TDto), parameters.Projection);
-
             parameters.Selections = fields.Any() ? fields : parameters.Selections;
 
+            // Resulting data
             var data = entities.Select(parameters.Selections, parameters.Exclusions, parameters.Expansions);
 
-            var result = new ListResult
-            {
-                Count = count,
-                Data = data
-            };
-
-            return result;
+            return new ListResult(count, data);
         }
 
-        private IEnumerable<string> ResolveProjectionProperties(Type type, string projection)
+        private static IEnumerable<string> ResolveProjectionProperties(Type type, string projection)
         {
             var p = DtoMetadata.Instance.ResolveProyection(type, projection);
-            return p != null ? p.ProjectionProperties : new string[] { };
+            return p != null ? p.ProjectionProperties : Array.Empty<string>();
         }
 
-        private string[] ResolveExpansions<TDto>(IEnumerable<string> expansions)
+        private static string[] ResolveExpansions<TDto>(IEnumerable<string> expansions)
         {
             var type = typeof(TDto);
             return expansions.Select(t => ListUtils.GetPropertyName<TDto>(t, out _, out _))

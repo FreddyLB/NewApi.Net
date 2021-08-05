@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace Api.Models
 {
-    public class ListResult
-    {
-        public int Count { get; set; }
-        public object Data { get; set; }
-    }
+    /// <summary>
+    /// Represents the data returned from a request.
+    /// </summary>
+    public record ListResult(int Count, IEnumerable Data);
 }
