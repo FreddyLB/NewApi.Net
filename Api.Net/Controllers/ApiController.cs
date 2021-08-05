@@ -4,13 +4,8 @@ using Api.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Api.Exceptions;
-using Microsoft.AspNetCore.JsonPatch;
 using Api.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Api;
 using Api.Attributes;
-using Api.Net.Core.Utils;
 using Api.Net.Core.Metatada;
 using Api.Models;
 
@@ -52,7 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public virtual ActionResult<ListResult> GetAll(ApiParameter parameter)
+        public virtual ActionResult<ListResult> FindAll(ApiParameter parameter)
         {
             try
             {
@@ -105,7 +100,6 @@ namespace Api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.GetInnerMessages());
             }
         }
-
 
         [HttpPatch]
         [Route("{id}")]
