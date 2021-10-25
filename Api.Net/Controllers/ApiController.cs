@@ -32,7 +32,9 @@ namespace Api.Controllers
                 TDto dto = Service.Find(id);
 
                 if (dto == null)
-                    throw new ValidateException("The specified resource was not found");
+                {
+                    return NotFound();
+                }
 
                 return Ok(dto);
             }

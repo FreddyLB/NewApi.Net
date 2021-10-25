@@ -60,8 +60,7 @@ namespace Api.Net.Tests
         
         public void Clear()
         {
-            People.RemoveRange(People);
-            SaveChanges();
+            Database.EnsureDeleted();
         }
     }
 }

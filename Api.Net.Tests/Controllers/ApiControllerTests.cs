@@ -31,11 +31,16 @@ namespace Api.Net.Tests.Controllers
             controller.Add(new PersonDto { Name = "Ana", Age = 23 });
             controller.Add(new PersonDto { Name = "Maria", Age = 30 });
 
-            var actionResult = controller.GetAll(new ApiParameter());
-            var okResult = actionResult.Result as OkObjectResult;
-            var value = okResult.Value as ListResult;
+            var v1 = controller.Find("1");
+            var v2 = controller.Find("2");
+            var v3 = controller.Find("3");
 
-            Assert.Equal(2, value.Count);
+            Assert.IsType<OkObjectResult>(v1.Result);
+            Assert.IsType<OkObjectResult>(v2.Result);
+            Assert.IsType<NotFoundResult>(v3.Result);
+
+            Assert.Equal(new PersonDto { Name = "Ana", Age = 23 }, v1.Value);
+
         }
 
         private static ApiController<T> GetController<T>() where T: class
@@ -60,7 +65,7 @@ namespace Api.Net.Tests.Controllers
             {
                 options.UseDbContext<PersonDbContext>(c =>
                 {
-                    return c.UseInMemoryDatabase("people");
+                    return c.UseInMemoryDatabase(Guid.NewGuid().ToString());
                 });
             });
 
